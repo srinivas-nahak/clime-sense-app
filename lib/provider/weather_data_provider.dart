@@ -1,7 +1,12 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_practice/data_model/weather_data_model.dart';
+import 'package:weather_practice/utilities/constants.dart';
 
 import '../main.dart';
 import '../services/location_fetch.dart';
@@ -76,17 +81,64 @@ class WeatherNotifier extends StateNotifier<Map<String, WeatherDataModel>> {
     return "";
   }
 
-  void fetchLocationWeather() async {
+  Future<List<int>> getStoredWeatherData() async {
+    //Getting weatherData from memory
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    if (sharedPreferences.containsKey(kLocalStorageWeatherDataKey)) {
+      dynamic storedWeatherData = jsonDecode(
+              sharedPreferences.get(kLocalStorageWeatherDataKey).toString())
+          as Map<String, dynamic>;
+
+      String storedCityName = storedWeatherData["city"]["name"];
+
+      setWeatherDataModel(storedWeatherData, storedCityName);
+
+      //Returning lat and long to see if it's equal to the current location
+      double lat = storedWeatherData["city"]["coord"]["lat"];
+      double lon = storedWeatherData["city"]["coord"]["lon"];
+
+      return [lat.toInt(), lon.toInt()];
+    }
+    return [];
+  }
+
+  Future<void> saveWeatherData(dynamic weatherData) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    //Clearing the existing data and putting new
+    sharedPreferences.clear();
+    await sharedPreferences.setString(
+        kLocalStorageWeatherDataKey, jsonEncode(weatherData));
+  }
+
+  void fetchCurrentLocationWeather() async {
+    //Fetching current location's data from memory
+    List<int> storedLocation = await getStoredWeatherData();
+
+    //Getting current lat,lang
     Position position = await LocationFetch().getLocation();
 
-    NetworkHelper networkHelper = NetworkHelper();
+    List<int> fetchedLocation = [
+      position.latitude.toInt(),
+      position.longitude.toInt()
+    ];
 
+    //Checking if stored lat and long are equal to the current location
+    if (storedLocation.isNotEmpty &&
+        listEquals(storedLocation, fetchedLocation)) {
+      return;
+    }
+
+    NetworkHelper networkHelper = NetworkHelper();
     var weatherData = await networkHelper.getNetworkData(
         lat: position.latitude, lon: position.longitude, getName: true);
 
     String cityName = networkHelper.fetchedCityName;
 
     setWeatherDataModel(weatherData, cityName);
+
+    //Saving weatherData in memory
+    saveWeatherData(weatherData);
   }
 }
 

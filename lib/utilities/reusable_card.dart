@@ -19,6 +19,9 @@ class ReusableCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
       ),*/
       elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 25),
         child: Column(children: [

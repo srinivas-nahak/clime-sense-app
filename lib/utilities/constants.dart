@@ -6,9 +6,11 @@ const kBlurryCircleColor = Color(0XFFc7a9b7);
 
 const kCardColor = Color(0XFFBFAEB6); //OXFFC9B8C0
 
-const kGoogleMapApi = "AIzaSyCWU987khOwMKgxsDP8kc6AzQWnuaMWkBM";
+const kGoogleMapApiKey = "AIzaSyCWU987khOwMKgxsDP8kc6AzQWnuaMWkBM";
 
 const kOpenWeatherApiKey = "02321fbfe8bf5bb425d1a5f93e26d8ae";
+
+const kLocalStorageWeatherDataKey = "currentWeatherData";
 
 const kGiantTextStyle = TextStyle(
   fontSize: 125,

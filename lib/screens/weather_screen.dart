@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_practice/data_model/weather_data_model.dart';
 import 'package:weather_practice/provider/weather_data_provider.dart';
 import 'package:weather_practice/utilities/reusable_card.dart';
@@ -16,17 +19,15 @@ class WeatherScreen extends ConsumerStatefulWidget {
 
 class _WeatherScreenState extends ConsumerState<WeatherScreen> {
   @override
-  void initState() {
+  initState() {
     //Fetching the current location's weather data
-    ref.read(weatherDataProvider.notifier).fetchLocationWeather();
+    ref.read(weatherDataProvider.notifier).fetchCurrentLocationWeather();
 
     super.initState();
   }
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     Map<String, WeatherDataModel> weatherDataModel =
         ref.watch(weatherDataProvider);
 
@@ -55,7 +56,7 @@ class _WeatherScreenState extends ConsumerState<WeatherScreen> {
                         child: IconButton(
                           onPressed: () => ref
                               .read(weatherDataProvider.notifier)
-                              .fetchLocationWeather(),
+                              .fetchCurrentLocationWeather(),
                           icon: const Icon(
                             Icons.near_me,
                             size: 30,

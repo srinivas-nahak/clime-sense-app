@@ -36,7 +36,7 @@ class GoogleTextFieldState extends State<GoogleTextField> {
   Widget build(BuildContext context) {
     return GooglePlaceAutoCompleteTextField(
         textEditingController: widget.controller,
-        googleAPIKey: kGoogleMapApi,
+        googleAPIKey: kGoogleMapApiKey,
         onClick: () {
           setState(() {
             if (widget.controller.text.isEmpty) {

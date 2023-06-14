@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_practice/data_model/weather_data_model.dart';
 import 'package:weather_practice/main.dart';
 import '../googleTextField/google_text_field.dart';
 import 'package:weather_practice/services/location_fetch.dart';
@@ -28,6 +29,10 @@ class WeatherScreenState extends State<WeatherScreen> {
       tomorrowTempMax = 0,
       dayAfterTempMin = 0,
       dayAfterTempMax = 0;
+
+  late List<WeatherDataModel> todayWeather;
+  late List<WeatherDataModel> tomorrowWeather;
+  late List<WeatherDataModel> dayAfterWeather;
 
   String weatherDescription = "", cityName = "";
 

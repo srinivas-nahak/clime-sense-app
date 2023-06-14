@@ -6,40 +6,16 @@ import 'package:weather_practice/main.dart';
 import 'package:weather_practice/utilities/constants.dart';
 
 class NetworkHelper {
-  String locationKey = "";
   String fetchedCityName = "";
   String weatherUrl = "";
 
   Future<dynamic> getNetworkData(
-      {double? lat,
-      double? lon,
-      String cityName = "",
-      bool getName = false}) async {
-    http.Response response;
-
-    //TODO:Try to use conditional operator to minimize if-else usage
-
-    if (getName) {
-      String latLong =
-          "https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lon&key=$kGoogleMapApi";
-
-      http.Response nameResponse = await http.get(Uri.parse(latLong));
-      var nameList = jsonDecode(nameResponse.body);
-
-      fetchedCityName =
-          nameList["results"][1]["address_components"][1]["long_name"];
-
-      if (fetchedCityName.contains(",")) {
-        fetchedCityName =
-            fetchedCityName.substring(0, fetchedCityName.indexOf(","));
-      }
-    }
-
+      {double? lat, double? lon, bool getName = false}) async {
     weatherUrl =
-        "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/$lat,$lon?unitGroup=metric&include=days&key=$kVisualCrossingApi&contentType=json";
-
+        "https://api.openweathermap.org/data/2.5/forecast?lat=$lat&lon=$lon&appid=$kOpenWeatherApiKey&units=metric";
     http.Response weatherResponse = await http.get(Uri.parse(weatherUrl));
 
+    //Showing error message
     if (weatherResponse.statusCode != 200) {
       scaffoldKey.currentState?.showSnackBar(
         const SnackBar(
@@ -51,13 +27,8 @@ class NetworkHelper {
     }
     var weatherData = jsonDecode(weatherResponse.body);
 
-    if (cityName != "") {
-      fetchedCityName = weatherData["resolvedAddress"];
-      if (fetchedCityName.contains(",")) {
-        fetchedCityName =
-            fetchedCityName.substring(0, fetchedCityName.indexOf(","));
-      }
-    }
+    //Using the fetchedCityName for current location
+    fetchedCityName = weatherData["city"]["name"];
 
     return weatherData;
   }

@@ -1,130 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:weather_practice/data_model/weather_data_model.dart';
-import 'package:weather_practice/main.dart';
+import 'package:weather_practice/provider/weather_data_provider.dart';
+import 'package:weather_practice/utilities/reusable_card.dart';
 import '../googleTextField/google_text_field.dart';
-import 'package:weather_practice/services/location_fetch.dart';
-import 'package:weather_practice/services/network_helper.dart';
 import 'package:weather_practice/utilities/constants.dart';
 
 import '../utilities/blurry_circle.dart';
 
-NetworkHelper networkHelper = NetworkHelper();
-
-class WeatherScreen extends StatefulWidget {
+class WeatherScreen extends ConsumerStatefulWidget {
   const WeatherScreen({super.key});
-
   @override
-  State<StatefulWidget> createState() {
-    return WeatherScreenState();
-  }
+  ConsumerState<ConsumerStatefulWidget> createState() => _WeatherScreenState();
 }
 
-class WeatherScreenState extends State<WeatherScreen> {
-  var controller = TextEditingController();
-
-  double todayTempMin = 0,
-      todayTempMax = 0,
-      todayFinalTemp = 0,
-      tomorrowTempMin = 0,
-      tomorrowTempMax = 0,
-      dayAfterTempMin = 0,
-      dayAfterTempMax = 0;
-
-  late List<WeatherDataModel> todayWeather;
-  late List<WeatherDataModel> tomorrowWeather;
-  late List<WeatherDataModel> dayAfterWeather;
-
-  String weatherDescription = "", cityName = "";
-
+class _WeatherScreenState extends ConsumerState<WeatherScreen> {
   @override
   void initState() {
+    //Fetching the current location's weather data
+    ref.read(weatherDataProvider.notifier).fetchLocationWeather();
+
     super.initState();
-    fetchLocationWeather();
-  }
-
-  fetchLocationWeather() {
-    LocationFetch().getLocation().then((position) async {
-      var weatherData = await networkHelper.getNetworkData(
-          lat: position.latitude, lon: position.longitude, getName: true);
-
-      cityName = networkHelper.fetchedCityName;
-      _updateUI(weatherData);
-    });
-  }
-
-  _updateUI(dynamic weatherData, [String inputCity = ""]) {
-    setState(() {
-      try {
-        controller.clear();
-
-        if (inputCity != "") {
-          if (inputCity.contains(",")) {
-            cityName = inputCity.substring(0, inputCity.indexOf(","));
-          } else {
-            cityName = inputCity;
-          }
-        }
-
-        weatherDescription =
-            weatherData["days"][0]["description"].toString().toLowerCase();
-
-        todayTempMin = weatherData["days"][0]["tempmin"];
-        todayTempMax = weatherData["days"][0]["tempmax"];
-
-        todayFinalTemp = weatherData["days"][0]["temp"];
-
-        tomorrowTempMin = weatherData["days"][1]["tempmin"];
-        tomorrowTempMax = weatherData["days"][1]["tempmax"];
-
-        dayAfterTempMin = weatherData["days"][2]["tempmin"];
-        dayAfterTempMax = weatherData["days"][2]["tempmax"];
-      } catch (e) {
-        scaffoldKey.currentState!.showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-          ),
-        );
-      }
-    });
-  }
-
-  Card getBottomCard({BuildContext? context, String? heading, String? body}) {
-    return Card(
-      color: kCardColor.withOpacity(0.1),
-      /*shape: RoundedRectangleBorder(
-        side: BorderSide(
-          color: kCardColor.withOpacity(0.1),
-          width: 1,
-        ),
-        borderRadius: BorderRadius.circular(15),
-      ),*/
-      elevation: 0,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 25),
-        child: Column(children: [
-          Text(
-            heading!,
-            style: kHeadingTextStyle,
-          ),
-          Text(
-            body!,
-            style: kBodyTextStyle,
-          )
-        ]),
-      ),
-    );
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(
+    BuildContext context,
+  ) {
+    Map<String, WeatherDataModel> weatherDataModel =
+        ref.watch(weatherDataProvider);
+
+    WeatherDataModel? today = weatherDataModel["dayOne"];
+    WeatherDataModel? tomorrow = weatherDataModel["dayTwo"];
+    WeatherDataModel? dayAfter = weatherDataModel["dayThree"];
+
     return Scaffold(
       backgroundColor: kBackgroundColor,
-      body: Stack(
-        children: [
-          BlurryCircle(kBlurryCircleColor.withOpacity(0.4)),
-          const Expanded(child: SizedBox()),
-          SafeArea(
-            child: Padding(
+      body: SafeArea(
+        child: Stack(
+          children: [
+            BlurryCircle(circleColor: kBlurryCircleColor.withOpacity(0.4)),
+            Padding(
               padding: const EdgeInsets.symmetric(vertical: 15),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -137,7 +53,9 @@ class WeatherScreenState extends State<WeatherScreen> {
                       Expanded(
                         flex: 1,
                         child: IconButton(
-                          onPressed: () => fetchLocationWeather(),
+                          onPressed: () => ref
+                              .read(weatherDataProvider.notifier)
+                              .fetchLocationWeather(),
                           icon: const Icon(
                             Icons.near_me,
                             size: 30,
@@ -148,7 +66,9 @@ class WeatherScreenState extends State<WeatherScreen> {
                       Expanded(
                         flex: 6,
                         child: GoogleTextField(
-                          sendData: _updateUI,
+                          sendData: (weatherData, cityName) => ref
+                              .read(weatherDataProvider.notifier)
+                              .setWeatherDataModel(weatherData, cityName),
                         ),
                       ),
                       const SizedBox(
@@ -168,7 +88,7 @@ class WeatherScreenState extends State<WeatherScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 20, right: 20),
                       child: Text(
-                        cityName,
+                        today?.cityName ?? "",
                         textAlign: TextAlign.left,
                         style: kSmallGiantTextStyle,
                       ),
@@ -179,7 +99,7 @@ class WeatherScreenState extends State<WeatherScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 20, right: 100),
                       child: Text(
-                        "It's $weatherDescription",
+                        "It's ${today?.weatherDescription ?? ""}",
                         textAlign: TextAlign.left,
                         style: kHeadingTextStyle.copyWith(
                             color: kCardColor.withOpacity(0.5)),
@@ -192,7 +112,7 @@ class WeatherScreenState extends State<WeatherScreen> {
                       alignment: Alignment.center,
                       widthFactor: double.infinity,
                       child: Text(
-                        "${todayFinalTemp.toStringAsFixed(1)}°",
+                        "${today?.mainTemp.toStringAsFixed(1)}°",
                         textAlign: TextAlign.left,
                         style: kGiantTextStyle,
                       ),
@@ -205,31 +125,28 @@ class WeatherScreenState extends State<WeatherScreen> {
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 3),
-                            child: getBottomCard(
-                                context: context,
+                            child: ReusableCard(
                                 heading: "Today",
                                 body:
-                                    "${todayTempMax.toInt()}°/${todayTempMin.toInt()}°"),
+                                    "${today?.tempMax.toInt()}°/${today?.tempMin.toInt()}°"),
                           ),
                         ),
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 3),
-                            child: getBottomCard(
-                                context: context,
+                            child: ReusableCard(
                                 heading: "Tomorrow",
                                 body:
-                                    "${tomorrowTempMax.toInt()}°/${tomorrowTempMin.toInt()}°"),
+                                    "${tomorrow?.tempMax.toInt()}°/${tomorrow?.tempMin.toInt()}°"),
                           ),
                         ),
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 3),
-                            child: getBottomCard(
-                                context: context,
+                            child: ReusableCard(
                                 heading: "Day After",
                                 body:
-                                    "${dayAfterTempMax.toInt()}°/${dayAfterTempMin.toInt()}°"),
+                                    "${dayAfter?.tempMax.toInt()}°/${dayAfter?.tempMin.toInt()}°"),
                           ),
                         ),
                       ],
@@ -238,14 +155,12 @@ class WeatherScreenState extends State<WeatherScreen> {
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
-
-typedef SendData = void Function(dynamic weatherData, String cityName);
 
 //Closing the keyboard if it's open
 // if (FocusManager.instance.primaryFocus!.hasFocus) {

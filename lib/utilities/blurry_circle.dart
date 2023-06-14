@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
 class BlurryCircle extends StatelessWidget {
-  BlurryCircle(this.circleColor);
+  const BlurryCircle({required this.circleColor, super.key});
 
-  Color circleColor;
+  final Color circleColor;
 
   @override
   Widget build(BuildContext context) {

@@ -8,7 +8,7 @@ const kCardColor = Color(0XFFBFAEB6); //OXFFC9B8C0
 
 const kGoogleMapApi = "AIzaSyCWU987khOwMKgxsDP8kc6AzQWnuaMWkBM";
 
-const kVisualCrossingApi = "2B2VYS9M7MMDAYD6TXZGYCTJ8";
+const kOpenWeatherApiKey = "02321fbfe8bf5bb425d1a5f93e26d8ae";
 
 const kGiantTextStyle = TextStyle(
   fontSize: 125,

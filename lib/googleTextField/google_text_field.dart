@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:weather_practice/services/network_helper.dart';
 
-import '../screens/weather_screen.dart';
 import '../utilities/constants.dart';
 import 'google_places_flutter.dart';
 
 class GoogleTextField extends StatefulWidget {
-  GoogleTextField({this.sendData, super.key});
+  GoogleTextField({required this.sendData, super.key});
 
   final TextEditingController controller = TextEditingController();
-
-  SendData? sendData;
+  final void Function(dynamic weatherDta, String cityName) sendData;
 
   @override
   State<StatefulWidget> createState() {
@@ -89,11 +88,11 @@ class GoogleTextFieldState extends State<GoogleTextField> {
             FocusManager.instance.primaryFocus?.hasFocus;
           }
 
-          var weatherData = await networkHelper.getNetworkData(
+          var weatherData = await NetworkHelper().getNetworkData(
               lat: double.parse(prediction.lat!),
               lon: double.parse(prediction.lng!));
 
-          widget.sendData!(weatherData, prediction.description!);
+          widget.sendData(weatherData, prediction.description!);
         }, // this callback is called when isLatLngRequired is true
         itemClick: (prediction) {
           widget.controller.text = prediction.description!;

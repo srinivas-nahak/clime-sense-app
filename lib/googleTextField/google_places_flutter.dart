@@ -2,7 +2,7 @@ library google_places_flutter;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:weather_practice/services/network_helper.dart';
+
 import '../utilities/constants.dart';
 import 'model/place_details.dart';
 import 'model/prediction.dart';
@@ -13,16 +13,16 @@ import 'package:dio/dio.dart';
 import 'package:rxdart/rxdart.dart';
 
 class GooglePlaceAutoCompleteTextField extends StatefulWidget {
-  InputDecoration inputDecoration;
-  ItemClick? itemClick;
-  GetPlaceDetailswWithLatLng? getPlaceDetailsWithLatLng;
+  final InputDecoration inputDecoration;
+  final ItemClick? itemClick;
+  final GetPlaceDetailswWithLatLng? getPlaceDetailsWithLatLng;
   final VoidCallback? onClick;
-  ShapeChange? shapeChange; //Changing the shape of search box
-  bool isLatLngRequired = true;
+  final ShapeChange? shapeChange; //Changing the shape of search box
+  final bool isLatLngRequired;
 
-  TextStyle textStyle;
-  String googleAPIKey;
-  int debounceTime = 600;
+  final TextStyle textStyle;
+  final String googleAPIKey;
+  final int debounceTime;
   List<String>? countries = [];
   TextEditingController textEditingController = TextEditingController();
 
@@ -37,16 +37,17 @@ class GooglePlaceAutoCompleteTextField extends StatefulWidget {
       this.countries,
       this.getPlaceDetailsWithLatLng,
       this.onClick,
-      this.shapeChange});
+      this.shapeChange,
+      super.key});
 
   @override
-  _GooglePlaceAutoCompleteTextFieldState createState() =>
+  State<GooglePlaceAutoCompleteTextField> createState() =>
       _GooglePlaceAutoCompleteTextFieldState();
 }
 
 class _GooglePlaceAutoCompleteTextFieldState
     extends State<GooglePlaceAutoCompleteTextField> {
-  final subject = new PublishSubject<String>();
+  final subject = PublishSubject<String>();
   OverlayEntry? _overlayEntry;
   List<Prediction> alPredictions = [];
   late OverlayState _overlayState;
@@ -57,7 +58,7 @@ class _GooglePlaceAutoCompleteTextFieldState
 
   @override
   Widget build(BuildContext context) {
-    _overlayState = Overlay.of(context)!;
+    _overlayState = Overlay.of(context);
 
     return CompositedTransformTarget(
       link: _layerLink,
@@ -82,7 +83,7 @@ class _GooglePlaceAutoCompleteTextFieldState
   }
 
   getLocation(String text) async {
-    Dio dio = new Dio();
+    Dio dio = Dio();
     String url =
         "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$text&key=${widget.googleAPIKey}";
 
@@ -93,9 +94,9 @@ class _GooglePlaceAutoCompleteTextFieldState
         String country = widget.countries![i];
 
         if (i == 0) {
-          url = url + "&components=country:$country";
+          url = "$url&components=country:$country";
         } else {
-          url = url + "|" + "country:" + country;
+          url = "$url|country:$country";
         }
       }
     }
@@ -137,6 +138,7 @@ class _GooglePlaceAutoCompleteTextFieldState
         .distinct()
         .debounceTime(Duration(milliseconds: widget.debounceTime))
         .listen(textChanged);
+    super.initState();
   }
 
   textChanged(String text) async {
@@ -154,7 +156,7 @@ class _GooglePlaceAutoCompleteTextFieldState
               width: size.width,
               child: CompositedTransformFollower(
                 showWhenUnlinked: false,
-                link: this._layerLink,
+                link: _layerLink,
                 offset: Offset(
                     0.0, size.height), //offset: Offset(0.0, size.height + 5.0),
                 child: ClipRRect(
@@ -191,8 +193,7 @@ class _GooglePlaceAutoCompleteTextFieldState
                               }
                             },
                             child: Container(
-                                padding: EdgeInsets.all(20),
-                                //margin: EdgeInsets.all(5),
+                                padding: const EdgeInsets.all(20),
                                 child: Text(
                                   alPredictions[index].description!,
                                   style: kTextFieldTextStyle.copyWith(
@@ -211,10 +212,9 @@ class _GooglePlaceAutoCompleteTextFieldState
   removeOverlay() {
     alPredictions.clear();
     _overlayEntry = _createOverlayEntry();
-    if (context != null) {
-      _overlayState.insert(_overlayEntry!);
-      _overlayEntry!.markNeedsBuild();
-    }
+
+    _overlayState.insert(_overlayEntry!);
+    _overlayEntry!.markNeedsBuild();
   }
 
   Future<Response?> getPlaceDetailsFromPlaceId(Prediction prediction) async {
@@ -233,7 +233,7 @@ class _GooglePlaceAutoCompleteTextFieldState
 
     widget.getPlaceDetailsWithLatLng!(prediction);
 
-//    prediction.latLng = new LatLng(
+//    prediction.latLng =  LatLng(
 //        placeDetails.result.geometry.location.lat,
 //        placeDetails.result.geometry.location.lng);
   }

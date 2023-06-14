@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:weather_practice/data_model/weather_data_model.dart';
 
 import '../main.dart';
+import '../services/location_fetch.dart';
+import '../services/network_helper.dart';
 
 class WeatherNotifier extends StateNotifier<Map<String, WeatherDataModel>> {
   WeatherNotifier() : super({});
 
-  void updateDataModel(dynamic weatherData, [String inputCity = ""]) {
+  void setWeatherDataModel(dynamic weatherData, [String inputCity = ""]) {
     try {
-      //controller.clear();
-
       String cityName = "";
 
       if (inputCity != "") {
@@ -21,44 +22,29 @@ class WeatherNotifier extends StateNotifier<Map<String, WeatherDataModel>> {
         }
       }
 
-      double todayMainTemp = weatherData["days"][0]["temp"];
-      double todayTempMin = weatherData["days"][0]["tempmin"];
-      double todayTempMax = weatherData["days"][0]["tempmax"];
-      String todayWeatherDescription =
-          weatherData["days"][0]["description"].toString().toLowerCase();
+      ///As the API is providing 5 days 3 hours data i.e 8 chunks per day, so we're using 0-8-16 indices
 
-      double tomorrowMainTemp = weatherData["days"][1]["temp"];
-      double tomorrowTempMin = weatherData["days"][1]["tempmin"];
-      double tomorrowTempMax = weatherData["days"][1]["tempmax"];
-      String tomorrowWeatherDescription =
-          weatherData["days"][1]["description"].toString().toLowerCase();
+      Map<String, WeatherDataModel> weatherMap = <String, WeatherDataModel>{};
 
-      double dayAfterMainTemp = weatherData["days"][2]["temp"];
-      double dayAfterTempMin = weatherData["days"][2]["tempmin"];
-      double dayAfterTempMax = weatherData["days"][2]["tempmax"];
-      String dayAfterWeatherDescription =
-          weatherData["days"][2]["description"].toString().toLowerCase();
+      for (int i = 0; i <= 32; i += 8) {
+        num mainTemp = weatherData["list"][i]["main"]["temp"];
+        num tempMin = weatherData["list"][i]["main"]["temp_min"];
+        num tempMax = weatherData["list"][i]["main"]["temp_max"];
+        String weatherDescription = weatherData["list"][i]["weather"][0]
+                ["description"]
+            .toString()
+            .toLowerCase();
 
-      Map<String, WeatherDataModel> weatherMap = {
-        "today": WeatherDataModel(
-            cityName: cityName,
-            mainTemp: todayMainTemp,
-            tempMin: todayTempMin,
-            tempMax: todayTempMax,
-            weatherDescription: todayWeatherDescription),
-        "tomorrow": WeatherDataModel(
-            cityName: cityName,
-            mainTemp: tomorrowMainTemp,
-            tempMin: tomorrowTempMin,
-            tempMax: tomorrowTempMax,
-            weatherDescription: tomorrowWeatherDescription),
-        "dayAfter": WeatherDataModel(
-            cityName: cityName,
-            mainTemp: dayAfterMainTemp,
-            tempMin: dayAfterTempMin,
-            tempMax: dayAfterTempMax,
-            weatherDescription: dayAfterWeatherDescription)
-      };
+        weatherMap = {
+          ...weatherMap,
+          getDayName(i): WeatherDataModel(
+              cityName: cityName,
+              mainTemp: mainTemp,
+              tempMin: tempMin,
+              tempMax: tempMax,
+              weatherDescription: weatherDescription)
+        };
+      }
 
       state = {...state, ...weatherMap};
     } catch (e) {
@@ -68,6 +54,39 @@ class WeatherNotifier extends StateNotifier<Map<String, WeatherDataModel>> {
         ),
       );
     }
+  }
+
+  String getDayName(int index) {
+    switch (index) {
+      case 0:
+        return "dayOne";
+
+      case 8:
+        return "dayTwo";
+
+      case 16:
+        return "dayThree";
+
+      case 24:
+        return "dayFour";
+
+      case 32:
+        return "dayFive";
+    }
+    return "";
+  }
+
+  void fetchLocationWeather() async {
+    Position position = await LocationFetch().getLocation();
+
+    NetworkHelper networkHelper = NetworkHelper();
+
+    var weatherData = await networkHelper.getNetworkData(
+        lat: position.latitude, lon: position.longitude, getName: true);
+
+    String cityName = networkHelper.fetchedCityName;
+
+    setWeatherDataModel(weatherData, cityName);
   }
 }
 

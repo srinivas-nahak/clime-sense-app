@@ -1,11 +1,13 @@
 class WeatherDataModel {
   const WeatherDataModel(
-      {required this.cityName,
+      {this.cityName = "",
       this.mainTemp = 0.0,
-      required this.tempMin,
-      required this.tempMax,
-      required this.weatherDescription});
+      this.tempMin = 0.0,
+      this.tempMax = 0.0,
+      this.weatherDescription = ""});
 
   final String cityName, weatherDescription;
-  final double mainTemp, tempMin, tempMax;
+
+  ///Using num and not double to avoid int and double mismatch
+  final num mainTemp, tempMin, tempMax;
 }

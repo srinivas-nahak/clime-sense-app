@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 
+//Colors
 const kBackgroundColor = Color(0XFF1E1E1E);
 
 const kBlurryCircleColor = Color(0XFFc7a9b7);
 
 const kCardColor = Color(0XFFBFAEB6); //OXFFC9B8C0
 
-const kGoogleMapApiKey = "AIzaSyCWU987khOwMKgxsDP8kc6AzQWnuaMWkBM";
-
-const kOpenWeatherApiKey = "02321fbfe8bf5bb425d1a5f93e26d8ae";
-
-const kLocalStorageWeatherDataKey = "currentWeatherData";
-
+//Text Styles
 const kGiantTextStyle = TextStyle(
   fontSize: 125,
   fontWeight: FontWeight.w300,
@@ -39,6 +35,25 @@ const kBodyTextStyle = TextStyle(
   fontWeight: FontWeight.w400,
   color: kCardColor,
 );
+
+//Keys
+
+const kGoogleMapApiKey = "AIzaSyCWU987khOwMKgxsDP8kc6AzQWnuaMWkBM";
+
+const kOpenWeatherApiKey = "02321fbfe8bf5bb425d1a5f93e26d8ae";
+
+const kLocalStorageWeatherDataKey = "currentWeatherData";
+
+//To avoid typo error enum is used as the key for map and not string
+enum kWeatherIcon { cloudy, sunny, snowy, rainy, cloudySunny }
+
+const Map<kWeatherIcon, String> kWeatherIconSet = {
+  kWeatherIcon.cloudy: "assets/icons/icon_cloudy.svg",
+  kWeatherIcon.cloudySunny: "assets/icons/icon_cloudy_sunny.svg",
+  kWeatherIcon.rainy: "assets/icons/icon_rainy.svg",
+  kWeatherIcon.snowy: "assets/icons/icon_snowy.svg",
+  kWeatherIcon.sunny: "assets/icons/icon_sunny.svg",
+};
 
 //Unused Colors
 

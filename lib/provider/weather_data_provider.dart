@@ -124,6 +124,7 @@ class WeatherNotifier extends StateNotifier<Map<String, WeatherDataModel>> {
     ];
 
     //Checking if stored lat and long are equal to the current location
+    //To avoid api call
     if (storedLocation.isNotEmpty &&
         listEquals(storedLocation, fetchedLocation)) {
       return;

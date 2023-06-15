@@ -1,8 +1,8 @@
-import 'dart:convert';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:weather_practice/data_model/weather_data_model.dart';
 import 'package:weather_practice/provider/weather_data_provider.dart';
 import 'package:weather_practice/utilities/reusable_card.dart';
@@ -18,6 +18,11 @@ class WeatherScreen extends ConsumerStatefulWidget {
 }
 
 class _WeatherScreenState extends ConsumerState<WeatherScreen> {
+  Widget cloudSvg = SvgPicture.asset(
+    kWeatherIconSet[kWeatherIcon.cloudySunny]!,
+    semanticsLabel: "Cloudy",
+  );
+
   @override
   initState() {
     //Fetching the current location's weather data
@@ -40,7 +45,7 @@ class _WeatherScreenState extends ConsumerState<WeatherScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            BlurryCircle(circleColor: kBlurryCircleColor.withOpacity(0.4)),
+            BlurryCircle(circleColor: kBlurryCircleColor.withOpacity(0.3)),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 15),
               child: Column(
@@ -57,6 +62,7 @@ class _WeatherScreenState extends ConsumerState<WeatherScreen> {
                           onPressed: () => ref
                               .read(weatherDataProvider.notifier)
                               .fetchCurrentLocationWeather(),
+                          splashColor: Colors.white,
                           icon: const Icon(
                             Icons.near_me,
                             size: 30,
@@ -78,10 +84,9 @@ class _WeatherScreenState extends ConsumerState<WeatherScreen> {
                     ],
                   ),
                   Expanded(
-                    child: Icon(
-                      Icons.cloud,
-                      size: 160,
-                      color: kCardColor.withOpacity(0.6),
+                    child: Padding(
+                      padding: const EdgeInsets.all(30.0),
+                      child: Opacity(opacity: 0.75, child: cloudSvg),
                     ),
                   ),
                   Align(
@@ -121,36 +126,44 @@ class _WeatherScreenState extends ConsumerState<WeatherScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(15, 10, 15, 15),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 3),
-                            child: ReusableCard(
-                                heading: "Today",
-                                body:
-                                    "${today?.tempMax.toInt()}°/${today?.tempMin.toInt()}°"),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: kCardColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(25)),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 3),
+                              child: ReusableCard(
+                                  heading: "Today",
+                                  body:
+                                      "${today?.tempMax.toInt()}°/${today?.tempMin.toInt()}°"),
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 3),
-                            child: ReusableCard(
-                                heading: "Tomorrow",
-                                body:
-                                    "${tomorrow?.tempMax.toInt()}°/${tomorrow?.tempMin.toInt()}°"),
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 3),
+                              child: ReusableCard(
+                                  heading: "Tomorrow",
+                                  body:
+                                      "${tomorrow?.tempMax.toInt()}°/${tomorrow?.tempMin.toInt()}°"),
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 3),
-                            child: ReusableCard(
-                                heading: "Day After",
-                                body:
-                                    "${dayAfter?.tempMax.toInt()}°/${dayAfter?.tempMin.toInt()}°"),
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 3),
+                              child: ReusableCard(
+                                  heading: "Day After",
+                                  body:
+                                      "${dayAfter?.tempMax.toInt()}°/${dayAfter?.tempMin.toInt()}°"),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -169,3 +182,15 @@ class _WeatherScreenState extends ConsumerState<WeatherScreen> {
 // } else {
 // FocusManager.instance.primaryFocus?.hasFocus;
 // }
+
+// Container(
+// height: 50,
+// width: 1,
+// color: kCardColor.withOpacity(0.5),
+// )
+
+// Icon(
+// Icons.cloud,
+// size: 160,
+// color: kCardColor.withOpacity(0.6),
+// )

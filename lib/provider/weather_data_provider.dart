@@ -12,7 +12,7 @@ import '../main.dart';
 import '../services/location_fetch.dart';
 import '../services/network_helper.dart';
 
-class WeatherNotifier extends StateNotifier<Map<String, WeatherDataModel>> {
+class WeatherNotifier extends StateNotifier<Map<kDayName, WeatherDataModel>> {
   WeatherNotifier() : super({});
 
   void setWeatherDataModel(dynamic weatherData, [String inputCity = ""]) {
@@ -29,16 +29,24 @@ class WeatherNotifier extends StateNotifier<Map<String, WeatherDataModel>> {
 
       ///As the API is providing 5 days 3 hours data i.e 8 chunks per day, so we're using 0-8-16 indices
 
-      Map<String, WeatherDataModel> weatherMap = <String, WeatherDataModel>{};
+      Map<kDayName, WeatherDataModel> weatherMap =
+          <kDayName, WeatherDataModel>{};
 
       for (int i = 0; i <= 32; i += 8) {
         num mainTemp = weatherData["list"][i]["main"]["temp"];
         num tempMin = weatherData["list"][i]["main"]["temp_min"];
         num tempMax = weatherData["list"][i]["main"]["temp_max"];
+        String iconId = weatherData["list"][i]["weather"][0]["icon"];
         String weatherDescription = weatherData["list"][i]["weather"][0]
                 ["description"]
             .toString()
             .toLowerCase();
+
+        //Showing snow icon for the 1st day of cold places
+        // because openWeatherMap doesn't provide snow icon id always
+        if (i == 0 && mainTemp < -6) {
+          iconId = "13d";
+        }
 
         weatherMap = {
           ...weatherMap,
@@ -47,6 +55,7 @@ class WeatherNotifier extends StateNotifier<Map<String, WeatherDataModel>> {
               mainTemp: mainTemp,
               tempMin: tempMin,
               tempMax: tempMax,
+              iconUri: _getIconUri(iconId),
               weatherDescription: weatherDescription)
         };
       }
@@ -61,24 +70,58 @@ class WeatherNotifier extends StateNotifier<Map<String, WeatherDataModel>> {
     }
   }
 
-  String getDayName(int index) {
+  kDayName getDayName(int index) {
     switch (index) {
       case 0:
-        return "dayOne";
+        return kDayName.day1;
 
       case 8:
-        return "dayTwo";
+        return kDayName.day2;
 
       case 16:
-        return "dayThree";
+        return kDayName.day3;
 
       case 24:
-        return "dayFour";
+        return kDayName.day4;
 
       case 32:
-        return "dayFive";
+        return kDayName.day5;
     }
-    return "";
+    return kDayName.day1;
+  }
+
+  String _getIconUri(String iconId) {
+    //Replacing "n" with "d" to avoid unnecessary switch statements
+    if (iconId.contains("n") && iconId != "01n") {
+      iconId = "${iconId.substring(0, 2)}d";
+    }
+
+    switch (iconId) {
+      case "01d":
+        return kWeatherIconSet[kWeatherIcons.sunny]!;
+      case "01n":
+        return kWeatherIconSet[kWeatherIcons.moon]!;
+      case "02d":
+        return kWeatherIconSet[kWeatherIcons.cloudySunny]!;
+
+      case "03d":
+      case "04d":
+        return kWeatherIconSet[kWeatherIcons.overcastCloudy]!;
+
+      case "09d":
+      case "10d":
+      case "11d":
+        return kWeatherIconSet[kWeatherIcons.rainy]!;
+
+      case "13d":
+        return kWeatherIconSet[kWeatherIcons.snowy]!;
+
+      case "50d":
+        return kWeatherIconSet[kWeatherIcons.cloudy]!;
+
+      default:
+        return kWeatherIconSet[kWeatherIcons.cloudySunny]!;
+    }
   }
 
   Future<List<int>> getStoredWeatherData() async {
@@ -144,5 +187,41 @@ class WeatherNotifier extends StateNotifier<Map<String, WeatherDataModel>> {
 }
 
 final weatherDataProvider =
-    StateNotifierProvider<WeatherNotifier, Map<String, WeatherDataModel>>(
+    StateNotifierProvider<WeatherNotifier, Map<kDayName, WeatherDataModel>>(
         (ref) => WeatherNotifier());
+
+// final iconProvider = StateProvider<String>((ref) {
+//   final weatherDataMap = ref.watch(weatherDataProvider);
+//
+//   String iconUri = "";
+//
+//   weatherDataMap.forEach((key, weatherData) {
+//     switch (weatherData.iconData) {
+//       case "01d":
+//         iconUri = kWeatherIconSet[kWeatherIcons.sunny]!;
+//         break;
+//       case "02d":
+//         iconUri = kWeatherIconSet[kWeatherIcons.cloudySunny]!;
+//         break;
+//       case "03d":
+//       case "04d":
+//         iconUri = kWeatherIconSet[kWeatherIcons.overcastCloudy]!;
+//         break;
+//       case "09d":
+//       case "10d":
+//       case "11d":
+//         iconUri = kWeatherIconSet[kWeatherIcons.rainy]!;
+//         break;
+//       case "13d":
+//         iconUri = kWeatherIconSet[kWeatherIcons.snowy]!;
+//         break;
+//       case "50d":
+//         iconUri = kWeatherIconSet[kWeatherIcons.cloudy]!;
+//         break;
+//       default:
+//         iconUri = kWeatherIconSet[kWeatherIcons.cloudySunny]!;
+//     }
+//   });
+//
+//   return iconUri;
+// });

@@ -17,20 +17,20 @@ class GoogleTextField extends StatefulWidget {
 }
 
 class GoogleTextFieldState extends State<GoogleTextField> {
-  var circularBorder = const OutlineInputBorder(
+  OutlineInputBorder circularBorder = const OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(30)),
       borderSide: BorderSide.none);
 
-  var semiCircularBorder = const OutlineInputBorder(
+  OutlineInputBorder semiCircularBorder = const OutlineInputBorder(
       borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30), topRight: Radius.circular(30)),
       borderSide: BorderSide.none);
 
-  var giveBorder = const OutlineInputBorder(
+  OutlineInputBorder giveBorder = const OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(30)),
       borderSide: BorderSide.none);
 
-  var textFieldBackGroundColor = kCardColor.withOpacity(0.25);
+  Color textFieldBackGroundColor = kCardColor.withOpacity(0.25);
 
   @override
   Widget build(BuildContext context) {

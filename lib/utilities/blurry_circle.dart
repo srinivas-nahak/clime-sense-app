@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
 class BlurryCircle extends StatelessWidget {
-  const BlurryCircle({required this.circleColor, super.key});
+  const BlurryCircle(
+      {required this.circleColor, this.blurAmount = 60.0, super.key});
 
   final Color circleColor;
+  final double blurAmount;
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +26,8 @@ class BlurryCircle extends StatelessWidget {
         ),
         BackdropFilter(
           filter: ui.ImageFilter.blur(
-            sigmaX: 60.0,
-            sigmaY: 60.0,
+            sigmaX: blurAmount,
+            sigmaY: blurAmount,
           ),
           child: const SizedBox(
               //color: Colors.transparent,

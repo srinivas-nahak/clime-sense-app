@@ -2,7 +2,7 @@
 
 
 ## Description
-An elegant cross-platform weather forecast app that shows the 5-day forecast. It is made with Flutter, Material Design 3 using the recommended <a href="https://docs.flutter.dev/resources/architectural-overview">Flutter Architecture Guidelines</a>.
+An elegant cross-platform weather forecast app with custom UI that shows the 5-day forecast. It is made with Flutter, Material Design 3 using the recommended <a href="https://docs.flutter.dev/resources/architectural-overview">Flutter Architecture Guidelines</a>.
 
 ## Screenshots
 
@@ -17,16 +17,22 @@ https://github.com/srinivas-nahak/clime-sense-app/assets/24781014/955b6da1-d727-
 
 
 ## Features
-- [x] Lets the user add their gender, height, weight, and age.
-- [x] Shows you your BMI along with a message
-- [x] Adapts the UI according to the screen size.
+- [x] A customized UI with enhanced user experience.
+- [x] Lets the user search desired location.
+- [x] Shows you the 5-day forecast
+- [ ] Makes you switch between Dark and Light themes.(To be added)
 
 
-## Flutter plugins
-Plugin Name        | Stars        
-:-------------------------|-------------------------
-|[Empty widget](https://github.com/TheAlphamerc/empty_widget) |[![GitHub stars](https://img.shields.io/github/stars/Thealphamerc/empty_widget?style=social)](https://github.com/login?return_to=%2FTheAlphamerc%empty_widget)
-|[Add Thumbnail](https://github.com/TheAlphamerc/flutter_plugin_add_thumbnail) |[![GitHub stars](https://img.shields.io/github/stars/Thealphamerc/flutter_plugin_add_thumbnail?style=social)](https://github.com/login?return_to=%2FTheAlphamerc%flutter_plugin_add_thumbnail)
+
+## Plugins Used
+Plugin Name    
+:-------------------------|
+|[geolocator](https://github.com/TheAlphamerc/empty_widget)
+|[http](https://github.com/TheAlphamerc/flutter_plugin_add_thumbnail) 
+|[flutter_riverpod](https://github.com/TheAlphamerc/flutter_plugin_add_thumbnail) 
+|[shared_preferences](https://github.com/TheAlphamerc/flutter_plugin_add_thumbnail) 
+|[flutter_svg](https://github.com/TheAlphamerc/flutter_plugin_add_thumbnail) 
+|[intl](https://github.com/TheAlphamerc/flutter_plugin_add_thumbnail) 
 
 ## License
 

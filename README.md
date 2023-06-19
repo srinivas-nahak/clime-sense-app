@@ -27,12 +27,12 @@ https://github.com/srinivas-nahak/clime-sense-app/assets/24781014/955b6da1-d727-
 ## Plugins Used
 Plugin Name    
 :-------------------------|
-|[geolocator](https://github.com/TheAlphamerc/empty_widget)
-|[http](https://github.com/TheAlphamerc/flutter_plugin_add_thumbnail) 
-|[flutter_riverpod](https://github.com/TheAlphamerc/flutter_plugin_add_thumbnail) 
-|[shared_preferences](https://github.com/TheAlphamerc/flutter_plugin_add_thumbnail) 
-|[flutter_svg](https://github.com/TheAlphamerc/flutter_plugin_add_thumbnail) 
-|[intl](https://github.com/TheAlphamerc/flutter_plugin_add_thumbnail) 
+|[geolocator]
+|[http]
+|[flutter_riverpod]
+|[shared_preferences]
+|[flutter_svg]
+|[intl]
 
 ## License
 

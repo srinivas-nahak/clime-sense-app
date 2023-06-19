@@ -188,9 +188,9 @@ class _GooglePlaceAutoCompleteTextFieldState
 
                                 getPlaceDetailsFromPlaceId(
                                     alPredictions[index]);
-
-                                removeOverlay();
                               }
+
+                              removeOverlay();
                             },
                             child: Container(
                                 padding: const EdgeInsets.all(20),

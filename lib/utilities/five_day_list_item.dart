@@ -41,15 +41,18 @@ class FiveDayListItem extends StatelessWidget {
             Expanded(
               child: Text(
                 dayName,
-                style: kHeadingTextStyle,
+                style: kBodyTextStyle,
               ),
             ),
             Expanded(
               flex: 2,
-              child: SvgPicture.asset(
-                iconUri,
-                height: 50,
-                width: 50,
+              child: Opacity(
+                opacity: 0.8,
+                child: SvgPicture.asset(
+                  iconUri,
+                  height: 50,
+                  width: 50,
+                ),
               ),
             ),
             const SizedBox(

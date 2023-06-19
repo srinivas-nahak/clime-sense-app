@@ -18,7 +18,7 @@ const kGiantTextStyle = TextStyle(
 const kSmallGiantTextStyle =
     TextStyle(fontSize: 35, fontWeight: FontWeight.w300, color: kCardColor);
 
-const kHeadingTextStyle = TextStyle(
+const kBodyTextStyle = TextStyle(
   fontSize: 17,
   fontWeight: FontWeight.w300,
   color: kCardColor,
@@ -30,7 +30,7 @@ final kTextFieldTextStyle = TextStyle(
   color: kBackgroundColor.withOpacity(0.75),
 );
 
-const kBodyTextStyle = TextStyle(
+const kHeadingTextStyle = TextStyle(
   fontSize: 20,
   height: 2,
   fontWeight: FontWeight.w400,
@@ -46,24 +46,32 @@ const kOpenWeatherApiKey = "02321fbfe8bf5bb425d1a5f93e26d8ae";
 const kLocalStorageWeatherDataKey = "currentWeatherData";
 
 //To avoid typo error enum is used as the key for map and not string
-enum kWeatherIcons {
+enum kWeatherIconName {
   cloudy,
   sunny,
   snowy,
   rainy,
   cloudySunny,
   overcastCloudy,
-  moon
+  moon,
+  windSpeed,
+  humidity,
+  seaLevel,
+  appIcon
 }
 
-const Map<kWeatherIcons, String> kWeatherIconSet = {
-  kWeatherIcons.cloudy: "assets/icons/icon_cloudy.svg",
-  kWeatherIcons.cloudySunny: "assets/icons/icon_cloudy_sunny.svg",
-  kWeatherIcons.rainy: "assets/icons/icon_rainy.svg",
-  kWeatherIcons.snowy: "assets/icons/icon_snowy.svg",
-  kWeatherIcons.sunny: "assets/icons/icon_sunny.svg",
-  kWeatherIcons.overcastCloudy: "assets/icons/icon_overcast_cloudy.svg",
-  kWeatherIcons.moon: "assets/icons/icon_moon.svg"
+const Map<kWeatherIconName, String> kWeatherIconSet = {
+  kWeatherIconName.cloudy: "assets/icons/icon_cloudy.svg",
+  kWeatherIconName.cloudySunny: "assets/icons/icon_cloudy_sunny.svg",
+  kWeatherIconName.rainy: "assets/icons/icon_rainy.svg",
+  kWeatherIconName.snowy: "assets/icons/icon_snowy.svg",
+  kWeatherIconName.sunny: "assets/icons/icon_sunny.svg",
+  kWeatherIconName.overcastCloudy: "assets/icons/icon_overcast_cloudy.svg",
+  kWeatherIconName.moon: "assets/icons/icon_moon.svg",
+  kWeatherIconName.windSpeed: "assets/icons/icon_wind_speed.svg",
+  kWeatherIconName.humidity: "assets/icons/icon_humidity.svg",
+  kWeatherIconName.seaLevel: "assets/icons/icon_sea_level.svg",
+  kWeatherIconName.appIcon: "assets/icons/clime_sense_app_icon.svg"
 };
 
 enum kDayName { day1, day2, day3, day4, day5 }

@@ -30,7 +30,7 @@ class GoogleTextFieldState extends State<GoogleTextField> {
       borderRadius: BorderRadius.all(Radius.circular(30)),
       borderSide: BorderSide.none);
 
-  Color textFieldBackGroundColor = kCardColor.withOpacity(0.25);
+  Color textFieldBackGroundColor = kCardColor.withOpacity(0.08);
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +51,7 @@ class GoogleTextFieldState extends State<GoogleTextField> {
               giveBorder = semiCircularBorder;
             } else {
               //Changing the SearchBar Color
-              textFieldBackGroundColor = kCardColor.withOpacity(0.25);
+              textFieldBackGroundColor = kCardColor.withOpacity(0.08);
 
               giveBorder = circularBorder;
 
@@ -64,7 +64,7 @@ class GoogleTextFieldState extends State<GoogleTextField> {
         },
         inputDecoration: InputDecoration(
             hintText: "Enter the city",
-            hintStyle: TextStyle(color: kBackgroundColor.withOpacity(0.4)),
+            hintStyle: TextStyle(color: kCardColor.withOpacity(0.15)),
             filled: true,
             fillColor: textFieldBackGroundColor,
             border: giveBorder,
@@ -73,7 +73,7 @@ class GoogleTextFieldState extends State<GoogleTextField> {
             suffixIcon: Icon(
               Icons.search,
               size: 25,
-              color: kBackgroundColor.withOpacity(0.2),
+              color: kCardColor.withOpacity(0.15),
             )),
         debounceTime: 250,
         isLatLngRequired: true,

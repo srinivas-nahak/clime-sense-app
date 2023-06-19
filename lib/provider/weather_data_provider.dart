@@ -36,6 +36,11 @@ class WeatherNotifier extends StateNotifier<Map<kDayName, WeatherDataModel>> {
         num mainTemp = weatherData["list"][i]["main"]["temp"];
         num tempMin = weatherData["list"][i]["main"]["temp_min"];
         num tempMax = weatherData["list"][i]["main"]["temp_max"];
+
+        num seaLevel = weatherData["list"][i]["main"]["sea_level"];
+        num humidity = weatherData["list"][i]["main"]["humidity"];
+        num windSpeed = weatherData["list"][i]["wind"]["speed"];
+
         String iconId = weatherData["list"][i]["weather"][0]["icon"];
         String weatherDescription = weatherData["list"][i]["weather"][0]
                 ["description"]
@@ -56,7 +61,10 @@ class WeatherNotifier extends StateNotifier<Map<kDayName, WeatherDataModel>> {
               tempMin: tempMin,
               tempMax: tempMax,
               iconUri: _getIconUri(iconId),
-              weatherDescription: weatherDescription)
+              weatherDescription: weatherDescription,
+              seaLevel: seaLevel,
+              windSpeed: windSpeed,
+              humidity: humidity)
         };
       }
 
@@ -70,25 +78,8 @@ class WeatherNotifier extends StateNotifier<Map<kDayName, WeatherDataModel>> {
     }
   }
 
-  kDayName getDayName(int index) {
-    switch (index) {
-      case 0:
-        return kDayName.day1;
-
-      case 8:
-        return kDayName.day2;
-
-      case 16:
-        return kDayName.day3;
-
-      case 24:
-        return kDayName.day4;
-
-      case 32:
-        return kDayName.day5;
-    }
-    return kDayName.day1;
-  }
+  //Here we're giving the dayName key for storing the weather data
+  kDayName getDayName(int index) => kDayName.values[index ~/ 8];
 
   String _getIconUri(String iconId) {
     //Replacing "n" with "d" to avoid unnecessary switch statements
@@ -98,29 +89,30 @@ class WeatherNotifier extends StateNotifier<Map<kDayName, WeatherDataModel>> {
 
     switch (iconId) {
       case "01d":
-        return kWeatherIconSet[kWeatherIcons.sunny]!;
+        return kWeatherIconSet[kWeatherIconName.sunny]!;
       case "01n":
-        return kWeatherIconSet[kWeatherIcons.moon]!;
-      case "02d":
-        return kWeatherIconSet[kWeatherIcons.cloudySunny]!;
+        return kWeatherIconSet[kWeatherIconName.moon]!;
 
+      case "02d":
       case "03d":
-      case "04d":
-        return kWeatherIconSet[kWeatherIcons.overcastCloudy]!;
+        return kWeatherIconSet[kWeatherIconName.cloudySunny]!;
 
       case "09d":
+      case "04d":
+        return kWeatherIconSet[kWeatherIconName.overcastCloudy]!;
+
       case "10d":
       case "11d":
-        return kWeatherIconSet[kWeatherIcons.rainy]!;
+        return kWeatherIconSet[kWeatherIconName.rainy]!;
 
       case "13d":
-        return kWeatherIconSet[kWeatherIcons.snowy]!;
+        return kWeatherIconSet[kWeatherIconName.snowy]!;
 
       case "50d":
-        return kWeatherIconSet[kWeatherIcons.cloudy]!;
+        return kWeatherIconSet[kWeatherIconName.cloudy]!;
 
       default:
-        return kWeatherIconSet[kWeatherIcons.cloudySunny]!;
+        return kWeatherIconSet[kWeatherIconName.cloudySunny]!;
     }
   }
 
@@ -189,39 +181,3 @@ class WeatherNotifier extends StateNotifier<Map<kDayName, WeatherDataModel>> {
 final weatherDataProvider =
     StateNotifierProvider<WeatherNotifier, Map<kDayName, WeatherDataModel>>(
         (ref) => WeatherNotifier());
-
-// final iconProvider = StateProvider<String>((ref) {
-//   final weatherDataMap = ref.watch(weatherDataProvider);
-//
-//   String iconUri = "";
-//
-//   weatherDataMap.forEach((key, weatherData) {
-//     switch (weatherData.iconData) {
-//       case "01d":
-//         iconUri = kWeatherIconSet[kWeatherIcons.sunny]!;
-//         break;
-//       case "02d":
-//         iconUri = kWeatherIconSet[kWeatherIcons.cloudySunny]!;
-//         break;
-//       case "03d":
-//       case "04d":
-//         iconUri = kWeatherIconSet[kWeatherIcons.overcastCloudy]!;
-//         break;
-//       case "09d":
-//       case "10d":
-//       case "11d":
-//         iconUri = kWeatherIconSet[kWeatherIcons.rainy]!;
-//         break;
-//       case "13d":
-//         iconUri = kWeatherIconSet[kWeatherIcons.snowy]!;
-//         break;
-//       case "50d":
-//         iconUri = kWeatherIconSet[kWeatherIcons.cloudy]!;
-//         break;
-//       default:
-//         iconUri = kWeatherIconSet[kWeatherIcons.cloudySunny]!;
-//     }
-//   });
-//
-//   return iconUri;
-// });

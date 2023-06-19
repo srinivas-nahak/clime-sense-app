@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:weather_practice/services/network_helper.dart';
 
-import '../screens/weather_screen.dart';
 import '../utilities/constants.dart';
 import 'google_places_flutter.dart';
 
 class GoogleTextField extends StatefulWidget {
-  GoogleTextField({this.sendData, super.key});
+  GoogleTextField({required this.sendData, super.key});
 
   final TextEditingController controller = TextEditingController();
-
-  SendData? sendData;
+  final void Function(dynamic weatherDta, String cityName) sendData;
 
   @override
   State<StatefulWidget> createState() {
@@ -18,26 +17,26 @@ class GoogleTextField extends StatefulWidget {
 }
 
 class GoogleTextFieldState extends State<GoogleTextField> {
-  var circularBorder = const OutlineInputBorder(
+  OutlineInputBorder circularBorder = const OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(30)),
       borderSide: BorderSide.none);
 
-  var semiCircularBorder = const OutlineInputBorder(
+  OutlineInputBorder semiCircularBorder = const OutlineInputBorder(
       borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30), topRight: Radius.circular(30)),
       borderSide: BorderSide.none);
 
-  var giveBorder = const OutlineInputBorder(
+  OutlineInputBorder giveBorder = const OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(30)),
       borderSide: BorderSide.none);
 
-  var textFieldBackGroundColor = kCardColor.withOpacity(0.25);
+  Color textFieldBackGroundColor = kCardColor.withOpacity(0.08);
 
   @override
   Widget build(BuildContext context) {
     return GooglePlaceAutoCompleteTextField(
         textEditingController: widget.controller,
-        googleAPIKey: kGoogleMapApi,
+        googleAPIKey: kGoogleMapApiKey,
         onClick: () {
           setState(() {
             if (widget.controller.text.isEmpty) {
@@ -52,7 +51,7 @@ class GoogleTextFieldState extends State<GoogleTextField> {
               giveBorder = semiCircularBorder;
             } else {
               //Changing the SearchBar Color
-              textFieldBackGroundColor = kCardColor.withOpacity(0.25);
+              textFieldBackGroundColor = kCardColor.withOpacity(0.08);
 
               giveBorder = circularBorder;
 
@@ -65,7 +64,7 @@ class GoogleTextFieldState extends State<GoogleTextField> {
         },
         inputDecoration: InputDecoration(
             hintText: "Enter the city",
-            hintStyle: TextStyle(color: kBackgroundColor.withOpacity(0.4)),
+            hintStyle: TextStyle(color: kCardColor.withOpacity(0.15)),
             filled: true,
             fillColor: textFieldBackGroundColor,
             border: giveBorder,
@@ -74,7 +73,7 @@ class GoogleTextFieldState extends State<GoogleTextField> {
             suffixIcon: Icon(
               Icons.search,
               size: 25,
-              color: kBackgroundColor.withOpacity(0.2),
+              color: kCardColor.withOpacity(0.15),
             )),
         debounceTime: 250,
         isLatLngRequired: true,
@@ -89,11 +88,11 @@ class GoogleTextFieldState extends State<GoogleTextField> {
             FocusManager.instance.primaryFocus?.hasFocus;
           }
 
-          var weatherData = await networkHelper.getNetworkData(
+          var weatherData = await NetworkHelper().getNetworkData(
               lat: double.parse(prediction.lat!),
               lon: double.parse(prediction.lng!));
 
-          widget.sendData!(weatherData, prediction.description!);
+          widget.sendData(weatherData, prediction.description!);
         }, // this callback is called when isLatLngRequired is true
         itemClick: (prediction) {
           widget.controller.text = prediction.description!;

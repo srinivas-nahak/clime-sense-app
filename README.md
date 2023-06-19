@@ -20,7 +20,7 @@ https://github.com/srinivas-nahak/clime-sense-app/assets/24781014/955b6da1-d727-
 - [x] A customized UI with enhanced user experience.
 - [x] Lets the user search desired location.
 - [x] Shows you the 5-day forecast
-- [ ] Makes you switch between Dark and Light themes. (To be added)
+- [ ] Makes you switch between Dark and Light themes. (In progress)
 
 
 ## Plugins Used

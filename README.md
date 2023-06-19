@@ -1,4 +1,4 @@
-![Clima_Sense_App_Header](https://github.com/srinivas-nahak/clime-sense-app/assets/24781014/5d9ab30b-223d-4737-8f18-625474f9a8fd)
+![Clima_Sense_App_Header](https://github.com/srinivas-nahak/clime-sense-app/assets/24781014/5020d32b-0a88-4372-bcc9-dc0dea0d0437)
 
 
 ## Description
@@ -22,7 +22,6 @@ https://github.com/srinivas-nahak/clime-sense-app/assets/24781014/955b6da1-d727-
 - [x] Shows you the 5-day forecast
 - [ ] Makes you switch between Dark and Light themes. (To be added)
 
-![Clima_Sense_App_Header](https://github.com/srinivas-nahak/clime-sense-app/assets/24781014/5020d32b-0a88-4372-bcc9-dc0dea0d0437)
 
 ## Plugins Used
 Plugin Name    

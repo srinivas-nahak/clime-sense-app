@@ -22,6 +22,12 @@ https://github.com/srinivas-nahak/clime-sense-app/assets/24781014/955b6da1-d727-
 - [x] Adapts the UI according to the screen size.
 
 
+## Flutter plugins
+Plugin Name        | Stars        
+:-------------------------|-------------------------
+|[Empty widget](https://github.com/TheAlphamerc/empty_widget) |[![GitHub stars](https://img.shields.io/github/stars/Thealphamerc/empty_widget?style=social)](https://github.com/login?return_to=%2FTheAlphamerc%empty_widget)
+|[Add Thumbnail](https://github.com/TheAlphamerc/flutter_plugin_add_thumbnail) |[![GitHub stars](https://img.shields.io/github/stars/Thealphamerc/flutter_plugin_add_thumbnail?style=social)](https://github.com/login?return_to=%2FTheAlphamerc%flutter_plugin_add_thumbnail)
+
 ## License
 
 Bmi App is distributed under the terms of the MIT License. See the
